@@ -1,18 +1,21 @@
 import { Character } from '../models/CharacterModel.js'
 import { Genre } from '../models/GenreModel.js'
+import { Op } from 'sequelize'
 
 const movieController = (Movie) => {
   const getMovies = async (req, res, next) => {
     const { query } = req
     const validQuery = query.title || query.genre || query.order
-    const filter = {}
-    query.title ? (filter.title = query.title) : null
-    query.genre ? (filter.genreId = query.genre) : null
 
     try {
       if (validQuery) {
         const response = await Movie.findAll({
-          where: filter,
+          where: {
+            [Op.or]: [
+              { title: (query.title ??= null) },
+              { genre: (query.genre ??= null) }
+            ]
+          },
           order: [['title', (query.order ??= 'ASC')]],
           attributes: ['imageUrl', 'title', 'creation', 'movieId']
         })
