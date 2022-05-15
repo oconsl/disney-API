@@ -9,3 +9,10 @@ export const sequelize = new Sequelize(DB, USER, PASSWORD, {
   dialect: 'postgres',
   logging: false
 })
+;(async () => {
+  try {
+    await sequelize.sync({ force: true })
+  } catch (err) {
+    console.error('Unable to connect to the database:', { error: err.name })
+  }
+})()
