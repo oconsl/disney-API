@@ -37,7 +37,7 @@ const genreController = (Genre) => {
     try {
       await Genre.update(body, {
         where: {
-          id: params.id
+          genreId: params.id
         }
       })
       res.status(200).send({ message: 'Genre updated.' })
@@ -52,7 +52,7 @@ const genreController = (Genre) => {
     try {
       await Genre.destroy({
         where: {
-          id: params.id
+          genreId: params.id
         }
       })
       res.status(200).send({ message: 'Genre deleted.' })

@@ -7,7 +7,7 @@ export const bodyValidator = Joi.object({
   imageUrl: Joi.string().required(),
   title: Joi.string().regex(alphaNumSpace).required(),
   creation: Joi.date().required(),
-  rate: Joi.number().required(),
+  rate: Joi.number().min(1).max(5).required(),
   characters: Joi.array()
     .items(Joi.string().regex(alphaNumSpace).required())
     .required(),
