@@ -30,9 +30,10 @@ app.all(
 
 app.use((err, _, res, next) => {
   if (err.name === 'UnauthorizedError') {
-    res
-      .status(401)
-      .json({ message: 'Unauthorized. Missing or invalid token provided.' })
+    res.status(401).json({
+      error: err.name,
+      cause: 'Unauthorized. Missing or invalid token provided.'
+    })
   } else {
     next(err)
   }

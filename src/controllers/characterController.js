@@ -1,34 +1,102 @@
 import { Movie } from '../models/MovieModel.js'
-import { Op } from 'sequelize'
+
+const QUERY_HANDLER = {
+  name: (queryData, query) => (queryData.name = query.name),
+  age: (queryData, query) => (queryData.age = query.age),
+  weight: (queryData, query) => (queryData.weight = query.weight),
+  movies: (queryData, query) => (queryData.movies = query.movies),
+  defaultQuery: (queryData, _) => queryData
+}
 
 const characterController = (Character) => {
   const getCharacters = async (req, res, next) => {
     const { query } = req
-    const validQuery = query.name || query.age || query.weight
+    const queryData = {}
+    const handler =
+      QUERY_HANDLER[Object.keys(query)[0]] || QUERY_HANDLER.defaultQuery
+    handler(queryData, query)
 
     try {
-      if (validQuery) {
-        const response = await Character.findAll({
-          where: {
-            [Op.or]: [
-              { name: (query.name ??= null) },
-              { age: (query.age ??= null) },
-              { weight: (query.weight ??= null) }
-            ]
-          },
-          attributes: ['imageUrl', 'name', 'characterId']
-        })
+      switch (Object.keys(queryData)[0]) {
+        case 'name':
+        case 'age':
+        case 'weight': {
+          const response = await Character.findAll({
+            where: queryData,
+            attributes: ['imageUrl', 'name', 'characterId']
+          })
 
-        const data = response.map((character) => character.toJSON())
-        res.status(200).json(data)
-      } else {
-        const response = await Character.findAll({
-          attributes: ['imageUrl', 'name', 'characterId']
-        })
+          const data = response.map((character) => character.toJSON())
+          res.status(200).json(data)
+          break
+        }
+        case 'movies': {
+          const response = await Character.findAll({
+            include: [
+              {
+                model: Movie,
+                as: 'movies',
+                attributes: [],
+                through: {
+                  attributes: []
+                },
+                where: {
+                  movieId: query.movies
+                }
+              }
+            ],
+            attributes: ['imageUrl', 'name', 'characterId']
+          })
 
-        const data = response.map((character) => character.toJSON())
-        res.status(200).json(data)
+          const data = response.map((character) => character.toJSON())
+          res.status(200).json(data)
+          break
+        }
+        default: {
+          const response = await Character.findAll({
+            attributes: ['imageUrl', 'name', 'characterId']
+          })
+
+          const data = response.map((character) => character.toJSON())
+          res.status(200).json(data)
+          break
+        }
       }
+      // if (validQuery) {
+      //   const response = await Character.findAll({
+      //     where: {
+      //       [Op.or]: [
+      //         { name: (query.name ??= null) },
+      //         { age: (query.age ??= null) },
+      //         { weight: (query.weight ??= null) }
+      //       ]
+      //     },
+      //     include: [
+      //       {
+      //         model: Movie,
+      //         as: 'movies',
+      //         attributes: [],
+      //         through: {
+      //           attributes: []
+      //         },
+      //         where: {
+      //           movieId: query.movies
+      //         }
+      //       }
+      //     ],
+      //     attributes: ['imageUrl', 'name', 'characterId']
+      //   })
+
+      //   const data = response.map((character) => character.toJSON())
+      //   res.status(200).json(data)
+      // } else {
+      //   const response = await Character.findAll({
+      //     attributes: ['imageUrl', 'name', 'characterId']
+      //   })
+
+      //   const data = response.map((character) => character.toJSON())
+      //   res.status(200).json(data)
+      // }
     } catch (err) {
       next(err)
     }

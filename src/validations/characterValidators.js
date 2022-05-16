@@ -24,6 +24,9 @@ export const queryValidator = Joi.alternatives().try(
   Joi.object({
     weight: Joi.string().required()
   }),
+  Joi.object({
+    movies: Joi.string().required()
+  }),
   Joi.object({})
 )
 
