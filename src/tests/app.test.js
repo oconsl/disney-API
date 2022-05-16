@@ -12,21 +12,6 @@ chai.use(chaiHttp)
 const testId = 'aaaaa'
 
 describe('Disney API - Movies', () => {
-  //test GET
-  describe('GET /movies', () => {
-    it('It should GET all the movies', (done) => {
-      chai
-        .request(server)
-        .get('/movies')
-        .set({ Authorization: TEST_TOKEN, Accept: 'application/json' })
-        .end((err, res) => {
-          res.should.have.status(200)
-          res.body.should.be.a('array')
-          done()
-        })
-    })
-  })
-
   //test GET by ID - Invalid ID
   describe('GET /movies/:id', () => {
     it('It should NOT GET a movie - Invalid ID', (done) => {
@@ -95,21 +80,6 @@ describe('Disney API - Movies', () => {
 })
 
 describe('Disney API - Characters', () => {
-  //test GET
-  describe('GET /characters', () => {
-    it('It should GET all the characters', (done) => {
-      chai
-        .request(server)
-        .get('/characters')
-        .set({ Authorization: TEST_TOKEN, Accept: 'application/json' })
-        .end((err, res) => {
-          res.should.have.status(200)
-          res.body.should.be.a('array')
-          done()
-        })
-    })
-  })
-
   //test GET by ID - Invalid ID
   describe('GET /characters/:id', () => {
     it('It should NOT GET a character - Invalid ID', (done) => {
