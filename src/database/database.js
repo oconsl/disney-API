@@ -11,7 +11,7 @@ export const sequelize = new Sequelize(DB, USER, PASSWORD, {
 })
 ;(async () => {
   try {
-    await sequelize.sync({ force: true })
+    await sequelize.sync()
   } catch (err) {
     console.error('Unable to connect to the database:', { error: err.name })
   }
