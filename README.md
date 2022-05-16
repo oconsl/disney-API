@@ -26,6 +26,14 @@ Install dependencies
   npm i
 ```
 
+Create the database with psql:
+
+```bash
+  psql -U postgres
+
+  CREATE DATABASE disney;
+```
+
 Create and configure .env file on root folder with the following environment variables:
 
 `USER`=**postgres**  (default)
