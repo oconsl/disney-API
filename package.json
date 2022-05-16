@@ -4,6 +4,19 @@
   "description": "An API to manage Disney characters, movies and genres.",
   "main": "app.js",
   "type": "module",
+  "keywords": [
+    "node",
+    "sequelize",
+    "postgres",
+    "mocha",
+    "chai",
+    "rest",
+    "joi",
+    "jwt",
+    "bcrypt",
+    "express",
+    "sendgrid"
+  ],
   "scripts": {
     "test": "mocha src/tests/app.test.js",
     "start": "nodemon src/app.js",
