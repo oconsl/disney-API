@@ -82,13 +82,34 @@ const characterController = (Character) => {
 
   const putCharacterById = async (req, res, next) => {
     const { params, body } = req
+    const { movies, imageUrl, name, age, weight, history } = body
 
     try {
-      await Character.update(body, {
+      const myCharacter = await Character.findOne({
         where: {
           characterId: params.id
         }
       })
+
+      if (myCharacter) {
+        myCharacter.imageUrl = imageUrl
+        myCharacter.name = name
+        myCharacter.age = age
+        myCharacter.weight = weight
+        myCharacter.history = history
+      }
+
+      await myCharacter.setMovies([])
+
+      const listOfMovies = await Movie.findAll()
+
+      listOfMovies.forEach(async (movie) => {
+        if (movies.includes(movie.dataValues.title))
+          await myCharacter.addMovie(movie)
+      })
+
+      myCharacter.save()
+
       res.status(200).send({ message: 'Character updated.' })
     } catch (err) {
       next(err)

@@ -97,13 +97,41 @@ const movieController = (Movie) => {
 
   const putMovieById = async (req, res, next) => {
     const { params, body } = req
+    const { characters, genres, imageUrl, title, creation, rate } = body
 
     try {
-      await Movie.update(body, {
+      const myMovie = await Movie.findOne({
         where: {
           movieId: params.id
         }
       })
+
+      if (myMovie) {
+        myMovie.imageUrl = imageUrl
+        myMovie.title = title
+        myMovie.creation = creation
+        myMovie.rate = rate
+      }
+
+      await myMovie.setCharacters([])
+      await myMovie.setGenres([])
+
+      const listOfCharacters = await Character.findAll()
+      const listOfGenres = await Genre.findAll()
+
+      listOfGenres.forEach(async (genre) => {
+        if (genres.includes(genre.dataValues.name)) {
+          await myMovie.addGenre(genre)
+        }
+      })
+
+      listOfCharacters.forEach(async (character) => {
+        if (characters.includes(character.dataValues.name))
+          await myMovie.addCharacter(character)
+      })
+
+      myMovie.save()
+
       res.status(200).send({ message: 'Movie updated.' })
     } catch (err) {
       next(err)

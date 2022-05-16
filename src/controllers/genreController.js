@@ -33,13 +33,27 @@ const genreController = (Genre) => {
 
   const putGenreById = async (req, res, next) => {
     const { params, body } = req
+    const { movies, imageUrl, name } = body
 
     try {
-      await Genre.update(body, {
-        where: {
-          genreId: params.id
-        }
+      const myGenre = await Genre.findOne({ where: { genreId: params.id } })
+
+      if (myGenre) {
+        myGenre.imageUrl = imageUrl
+        myGenre.name = name
+      }
+
+      await myGenre.setMovies([])
+
+      const listOfMovies = await Movie.findAll()
+
+      listOfMovies.forEach(async (movie) => {
+        if (movies.includes(movie.dataValues.title))
+          await myGenre.addMovie(movie)
       })
+
+      myGenre.save()
+
       res.status(200).send({ message: 'Genre updated.' })
     } catch (err) {
       next(err)

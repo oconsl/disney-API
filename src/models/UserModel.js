@@ -3,8 +3,8 @@ import { sequelize } from '../database/database.js'
 
 export const User = sequelize.define('User', {
   userId: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
     primaryKey: true
   },
   email: {
