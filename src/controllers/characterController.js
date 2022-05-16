@@ -62,41 +62,6 @@ const characterController = (Character) => {
           break
         }
       }
-      // if (validQuery) {
-      //   const response = await Character.findAll({
-      //     where: {
-      //       [Op.or]: [
-      //         { name: (query.name ??= null) },
-      //         { age: (query.age ??= null) },
-      //         { weight: (query.weight ??= null) }
-      //       ]
-      //     },
-      //     include: [
-      //       {
-      //         model: Movie,
-      //         as: 'movies',
-      //         attributes: [],
-      //         through: {
-      //           attributes: []
-      //         },
-      //         where: {
-      //           movieId: query.movies
-      //         }
-      //       }
-      //     ],
-      //     attributes: ['imageUrl', 'name', 'characterId']
-      //   })
-
-      //   const data = response.map((character) => character.toJSON())
-      //   res.status(200).json(data)
-      // } else {
-      //   const response = await Character.findAll({
-      //     attributes: ['imageUrl', 'name', 'characterId']
-      //   })
-
-      //   const data = response.map((character) => character.toJSON())
-      //   res.status(200).json(data)
-      // }
     } catch (err) {
       next(err)
     }
